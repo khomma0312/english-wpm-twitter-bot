@@ -1,2 +1,4 @@
 speech-to-text-api.json
 src/audios/*
+!src/audios/.gitkeep
+src/__pycache__

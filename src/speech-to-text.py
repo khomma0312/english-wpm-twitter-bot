@@ -1,51 +1,18 @@
-
-# Imports the Google Cloud client library
-from google.cloud import speech
-import io
+from dbmanipulation import DBManipulation
+from audiorecognition import AudioRecognition
 
 def main():
-	# Instantiates a client
-	client = speech.SpeechClient()
-	# The name of the audio file to transcribe
-	content = get_audio_file_pointer('out.wav')
-	# Get audio data for recognition
-	audio = speech.RecognitionAudio(content=content)
-	# Get config for speech recognition
-	config = get_recoginition_config()
-	# Detects speech in the audio file
-	response = client.recognize(config=config, audio=audio)
-	# Get transcript from response
-	transcript = get_all_transcript(response)
-	# Calculate wpm from transcript of 2 min audio
-	wpm = calculate_wpm(transcript)
-	print(wpm)
+	# recognizer = AudioRecognition('out.wav')
+	# response = recognizer.get_recognized_result()
+	# transcript = recognizer.get_all_transcript(response)
+	# wpm = recognizer.calculate_wpm(transcript)
+	# print(transcript)
 
+	db = DBManipulation()
+	# video_urlはどこから取得する？
+	sql = db.make_bulk_insert_query('video_wpms', {'wpm': 100.5, 'video_url': 'https://www.youtube.com/watch?v=XjU0lPXry5E'})
+	# db.save_result(result={'wpm': wpm, 'video_url': 'https://www.youtube.com/watch?v=XjU0lPXry5E'})
+	print(sql)
 
-def get_audio_file_pointer(filename):
-	speech_file = '/src/audios/' + filename
-	with io.open(speech_file, 'rb') as f:
-		content = f.read()
-	return content
-
-def get_recoginition_config():
-	return speech.RecognitionConfig(
-		encoding=speech.RecognitionConfig.AudioEncoding.ENCODING_UNSPECIFIED,
-		language_code="en-US",
-		audio_channel_count=2
-	)
-
-def get_all_transcript(response):
-	all_transcript = ''
-
-	if 'results' in response:
-		for result in response.results:
-			all_transcript += result.alternatives[0].transcript
-
-	print(all_transcript)
-	return all_transcript
-
-def calculate_wpm(transcript):
-	transcript = transcript.replace('.', '')
-	return len(transcript.split(' ')) / 2
-
-main()
+if __name__ == '__main__':
+	main()

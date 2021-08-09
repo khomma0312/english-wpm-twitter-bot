@@ -29,7 +29,7 @@ def download_audio():
 
 def slice_downloaded_audio(original_audio_path):
 	sound = AudioSegment.from_wav(original_audio_path)
-	# 10秒間取り出せるはず
+	# 最初の2分間のみ取り出す
 	period = 40 * 1000
 	processedAudio = sound[:period]
 	processedAudio.export(make_audio_file_path('out.wav'), format='wav')

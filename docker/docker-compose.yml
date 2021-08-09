@@ -1,0 +1,24 @@
+version: '3'
+services:
+  python3:
+    build: .
+    container_name: 'slim-python3'
+    working_dir: '/src'
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - ${SRC_PATH}:/src
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+
+  db:
+    image: mysql:latest
+    container_name: 'slim-python3-db'
+    ports:
+      - 3636:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: python_db
+      MYSQL_USER: pyuser
+      MYSQL_PASSWORD: pypasswordlocal

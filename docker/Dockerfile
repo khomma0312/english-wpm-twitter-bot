@@ -1,7 +1,8 @@
 FROM python:3
 
-RUN apt-get update
-RUN apt-get -y install locales \
+RUN apt-get update \
+    && apt-get -y install software-properties-common \
+    locales \
 	vim \
 	less \
 	apt-utils \
@@ -10,16 +11,14 @@ RUN apt-get -y install locales \
     && pip install --no-cache-dir \
     autopep8 \
     flake8 \
+    && add-apt-repository ppa:mc3man/trusty-media \
+    && apt-get install ffmpeg -y \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
-RUN apt-get install -y vim less
 
 # youtube-dlでffmpegが必要なのでインストール
-RUN apt-get install software-properties-common -y \
-&& add-apt-repository ppa:mc3man/trusty-media \
-&& apt-get install ffmpeg -y
 
 ENV LANG ja_JP.UTF-8
 ENV LANGUAGE ja_JP:ja
